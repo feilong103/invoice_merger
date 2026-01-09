@@ -1,0 +1,13 @@
+# Flask Web框架
+Flask==3.0.0
+
+# PDF处理
+PyMuPDF==1.23.8
+reportlab==4.0.7
+
+# Werkzeug（Flask依赖）
+Werkzeug==3.0.1
+
+# 其他工具
+click>=8.0
+itsdangerous>=2.0

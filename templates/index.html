@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>发票合并工具 - 智能PDF合并</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- 顶部导航栏 -->
+        <nav class="navbar">
+            <div class="nav-content">
+                <div class="nav-brand">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/>
+                        <path d="M14 2v6h6"/>
+                        <path d="M16 13H8"/>
+                        <path d="M16 17H8"/>
+                        <path d="M10 9H8"/>
+                    </svg>
+                    <h1>发票合并工具</h1>
+                </div>
+                <div class="nav-info">
+                    <span class="file-counter" id="fileCounter">0 个文件</span>
+                </div>
+            </div>
+        </nav>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <!-- 左侧上传区域 -->
+            <div class="upload-section">
+                <!-- 上传卡片 -->
+                <div class="upload-card" id="uploadCard">
+                    <div class="upload-icon">
+                        <svg viewBox="0 0 64 64" fill="currentColor">
+                            <path d="M32 10L18 26h10v16h8V26h10L32 10z"/>
+                            <path d="M12 42v10h40V42h6v12a4 4 0 0 1-4 4H10a4 4 0 0 1-4-4V42h6z"/>
+                        </svg>
+                    </div>
+                    
+                    <h2 class="upload-title">拖拽文件到此处</h2>
+                    <p class="upload-subtitle">或点击选择 PDF 文件</p>
+                    <p class="upload-limit">支持 1000+ 文件同时处理</p>
+                    
+                    <input type="file" 
+                           id="fileInput" 
+                           multiple 
+                           accept="application/pdf"
+                           style="display: none;">
+                    
+                    <button class="btn-primary" id="selectFilesBtn">
+                        选择文件
+                    </button>
+                </div>
+
+                <!-- 文件列表 -->
+                <div class="file-list-container" id="fileListContainer" style="display: none;">
+                    <div class="file-list-header">
+                        <h3>已选择文件</h3>
+                        <button class="btn-clear" id="clearAllBtn">清空全部</button>
+                    </div>
+                    
+                    <div class="file-list" id="fileList">
+                        <!-- 文件列表项将通过JS动态生成 -->
+                    </div>
+
+                    <div class="merge-options">
+                        <label class="option-label">
+                            <span>输出文件名：</span>
+                            <input type="text" id="outputFileName" value="merged_invoices" class="text-input">
+                        </label>
+                        
+                        <label class="option-label">
+                            <span>每页合并：</span>
+                            <select id="mergeMode" class="select-input">
+                                <option value="2up">2张发票（上下排版）</option>
+                                <option value="4up">4张发票（2x2排版）</option>
+                            </select>
+                        </label>
+                    </div>
+
+                    <button class="btn-merge" id="mergeBtn">
+                        <span class="btn-text">开始合并</span>
+                        <div class="btn-loading" style="display: none;">
+                            <div class="loading-spinner"></div>
+                        </div>
+                    </button>
+                </div>
+
+                <!-- 进度条 -->
+                <div class="progress-container" id="progressContainer" style="display: none;">
+                    <div class="progress-header">
+                        <h3>正在处理中...</h3>
+                        <span class="progress-percentage" id="progressPercentage">0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <div class="progress-steps">
+                        <span class="step-info" id="stepInfo">准备中</span>
+                        <span class="step-detail" id="stepDetail"></span>
+                    </div>
+                </div>
+
+                <!-- 完成状态 -->
+                <div class="success-container" id="successContainer" style="display: none;">
+                    <div class="success-icon">
+                        <svg viewBox="0 0 64 64" fill="currentColor">
+                            <path d="M32 4C16.5 4 4 16.5 4 32s12.5 28 28 28 28-12.5 28-28S47.5 4 32 4z"/>
+                            <path d="M20 32l8 8 16-16" stroke="white" stroke-width="3" fill="none"/>
+                        </svg>
+                    </div>
+                    <h3>合并完成！</h3>
+                    <p class="success-message" id="successMessage">文件已成功合并</p>
+                    <div class="success-actions">
+                        <button class="btn-download" id="downloadBtn">下载文件</button>
+                        <button class="btn-reset" id="resetBtn">继续合并</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 右侧预览区域 -->
+            <div class="preview-section">
+                <div class="preview-card">
+                    <h3>功能特性</h3>
+                    <ul class="feature-list">
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            <span>支持批量上传 1000+ PDF 文件</span>
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            <span>智能拖拽排序与文件管理</span>
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            <span>高清输出与智能缩放</span>
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            <span>多格式合并选项（2up/4up）</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="stats-card">
+                    <h4>统计信息</h4>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <span class="stat-label">总文件数</span>
+                            <span class="stat-value" id="totalFiles">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">预计页数</span>
+                            <span class="stat-value" id="estimatedPages">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">文件大小</span>
+                            <span class="stat-value" id="totalSize">0 MB</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- 底部信息 -->
+        <footer class="footer">
+            <p>© 2024 发票合并工具 · 基于 Python Flask 与 PyMuPDF</p>
+        </footer>
+    </div>
+
+    <!-- Toast 通知 -->
+    <div class="toast" id="toast"></div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
