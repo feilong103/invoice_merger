@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>发票合并工具 - 智能PDF合并</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.ico') }}">
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
 </head>
+
 <body>
     <div class="app-container">
         <!-- 顶部导航栏 -->
@@ -14,11 +16,11 @@
             <div class="nav-content">
                 <div class="nav-brand">
                     <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/>
-                        <path d="M14 2v6h6"/>
-                        <path d="M16 13H8"/>
-                        <path d="M16 17H8"/>
-                        <path d="M10 9H8"/>
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" />
+                        <path d="M14 2v6h6" />
+                        <path d="M16 13H8" />
+                        <path d="M16 17H8" />
+                        <path d="M10 9H8" />
                     </svg>
                     <h1>发票合并工具</h1>
                 </div>
@@ -36,21 +38,17 @@
                 <div class="upload-card" id="uploadCard">
                     <div class="upload-icon">
                         <svg viewBox="0 0 64 64" fill="currentColor">
-                            <path d="M32 10L18 26h10v16h8V26h10L32 10z"/>
-                            <path d="M12 42v10h40V42h6v12a4 4 0 0 1-4 4H10a4 4 0 0 1-4-4V42h6z"/>
+                            <path d="M32 10L18 26h10v16h8V26h10L32 10z" />
+                            <path d="M12 42v10h40V42h6v12a4 4 0 0 1-4 4H10a4 4 0 0 1-4-4V42h6z" />
                         </svg>
                     </div>
-                    
+
                     <h2 class="upload-title">拖拽文件到此处</h2>
                     <p class="upload-subtitle">或点击选择 PDF 文件</p>
                     <p class="upload-limit">支持 1000+ 文件同时处理</p>
-                    
-                    <input type="file" 
-                           id="fileInput" 
-                           multiple 
-                           accept="application/pdf"
-                           style="display: none;">
-                    
+
+                    <input type="file" id="fileInput" multiple accept="application/pdf" style="display: none;">
+
                     <button class="btn-primary" id="selectFilesBtn">
                         选择文件
                     </button>
@@ -62,7 +60,7 @@
                         <h3>已选择文件</h3>
                         <button class="btn-clear" id="clearAllBtn">清空全部</button>
                     </div>
-                    
+
                     <div class="file-list" id="fileList">
                         <!-- 文件列表项将通过JS动态生成 -->
                     </div>
@@ -72,7 +70,7 @@
                             <span>输出文件名：</span>
                             <input type="text" id="outputFileName" value="merged_invoices" class="text-input">
                         </label>
-                        
+
                         <label class="option-label">
                             <span>每页合并：</span>
                             <select id="mergeMode" class="select-input">
@@ -109,8 +107,8 @@
                 <div class="success-container" id="successContainer" style="display: none;">
                     <div class="success-icon">
                         <svg viewBox="0 0 64 64" fill="currentColor">
-                            <path d="M32 4C16.5 4 4 16.5 4 32s12.5 28 28 28 28-12.5 28-28S47.5 4 32 4z"/>
-                            <path d="M20 32l8 8 16-16" stroke="white" stroke-width="3" fill="none"/>
+                            <path d="M32 4C16.5 4 4 16.5 4 32s12.5 28 28 28 28-12.5 28-28S47.5 4 32 4z" />
+                            <path d="M20 32l8 8 16-16" stroke="white" stroke-width="3" fill="none" />
                         </svg>
                     </div>
                     <h3>合并完成！</h3>
@@ -129,25 +127,25 @@
                     <ul class="feature-list">
                         <li>
                             <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                             <span>支持批量上传 1000+ PDF 文件</span>
                         </li>
                         <li>
                             <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                             <span>智能拖拽排序与文件管理</span>
                         </li>
                         <li>
                             <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                             <span>高清输出与智能缩放</span>
                         </li>
                         <li>
                             <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                             <span>多格式合并选项（2up/4up）</span>
                         </li>
@@ -185,4 +183,5 @@
 
     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 </body>
+
 </html>
