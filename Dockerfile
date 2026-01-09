@@ -1,5 +1,5 @@
 # 使用官方 Python 3.11 镜像作为基础镜像
-FROM python:3.11-slim as builder
+FROM python:3.11-slim AS builder
 
 # 安装构建依赖
 RUN apt-get update && apt-get install -y \
